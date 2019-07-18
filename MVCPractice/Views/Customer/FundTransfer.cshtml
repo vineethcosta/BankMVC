@@ -1,0 +1,60 @@
+﻿@model BusinessLayer.Account
+
+@{
+    ViewBag.Title = "FundTransfer";
+
+}
+
+@section customerMenu
+        {
+    <button type="button" id="fundTransferBtn" onclick="location.href='@Url.Action("FundTransfer")'" class="btn btn-info ">Fund Transer</button><br />
+    <button type="button" id="miniStatementBtn" onclick="location.href='@Url.Action("MiniStatement")'" class="btn btn-info ">MiniStatement</button><br />
+    <button type="button" id="changePasswordBtn" onclick="location.href='@Url.Action("ChangePassword")'" class="btn btn-info ">ChangePassword </button><br />
+    <button type="button" id="balanceEnquiryBtn" onclick="location.href='@Url.Action("BalanceEnquiry")'" class="btn btn-info ">BalanceEnquiry</button><br />
+    <button type="button" id="customStatementBtn" onclick="location.href='@Url.Action("CustomStatement")'" class="btn btn-info ">CustomStatement</button><br />
+    @*@Html.ActionLink("Fund Transer", "FundTransfer")
+    @Html.ActionLink("Mini Statement", "MiniStatement")
+    @Html.ActionLink("Change Password", "ChangePassword")
+    @Html.ActionLink("Balance Enquiry", "BalanceEnquiry")
+    @Html.ActionLink("Custome Statement", "CustomStatement")*@
+    <br />
+
+}
+
+    <h2>FundTransfer</h2>
+    <div>
+        @ViewBag.Error
+    </div>
+    <div>
+        @ViewBag.Success
+    </div>
+@using (Html.BeginForm())
+{
+    <div class="jumbotron d-inline-block" style=" margin-top: 100px">
+        <div>
+            <h1><label id="Label1">Fund Transfer</label></h1>
+        </div>
+        <div class="input-group mb-3">
+            <label id="Label2" class="input-group-text input-group-prepend">Source Account No</label>
+            @Html.EditorFor(Model => Model.accountNo)
+        </div>
+        <div class="input-group mb-3">
+            <label id="Label2" class="input-group-text input-group-prepend">Destination Account No</label>
+            @Html.Editor("destinationAccountNo")
+        </div>
+        <div class="input-group mb-3">
+            <label id="Label4" class="input-group-text input-group-prepend">Amount</label>
+            @Html.EditorFor(Model => Model.amount)
+        </div>
+        <div class="input-group mb-3">
+            <label id="Label5" class="input-group-text input-group-prepend">Comment</label>
+            @Html.Editor("comment")
+        </div>
+        <div>
+            <input type="submit" class="btn btn-outline-success" value="Transfer" />
+        </div>
+        <label id="Label6"></label>
+
+    </div>
+}
+

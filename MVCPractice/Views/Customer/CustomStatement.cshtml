@@ -1,0 +1,43 @@
+﻿@model BusinessLayer.Transaction
+
+@{
+    ViewBag.Title = "CustomStatement";
+}
+@section customerMenu
+        {
+    <button type="button" id="fundTransferBtn" onclick="location.href='@Url.Action("FundTransfer")'" class="btn btn-info ">Fund Transer</button><br />
+    <button type="button" id="miniStatementBtn" onclick="location.href='@Url.Action("MiniStatement")'" class="btn btn-info ">MiniStatement</button><br />
+    <button type="button" id="changePasswordBtn" onclick="location.href='@Url.Action("ChangePassword")'" class="btn btn-info ">ChangePassword </button><br />
+    <button type="button" id="balanceEnquiryBtn" onclick="location.href='@Url.Action("BalanceEnquiry")'" class="btn btn-info ">BalanceEnquiry</button><br />
+    <button type="button" id="customStatementBtn" onclick="location.href='@Url.Action("CustomStatement")'" class="btn btn-info ">CustomStatement</button><br />
+
+}
+<script type="text/javascript">
+    $(function () {
+        // This will make every element with the class "date-picker" into a DatePicker element
+        $('.date-picker').datepicker();
+    })
+</script>
+
+<h2>CustomStatement</h2>
+<div class="jumbotron d-inline-block" style=" margin-top: 100px">
+@using (Html.BeginForm())
+{
+    <div class="input-group mb-3">
+        <Label ID="Label1"   Class="input-group-text input-group-prepend">Account no:</Label>
+        <label id="Account" class="form-control">@Session["accountNumber"]</label>
+    </div>
+    <div class="input-group mb-3">
+        <Label ID="Label2"  Class="input-group-text input-group-prepend">From Date:</Label>
+        @Html.TextBox("fromDate", "", new { @class = "date-picker" })
+        
+    </div>
+    <div class="input-group mb-3">
+        <Label ID="Label3"  Class="input-group-text input-group-prepend">To Date:</Label>
+        @Html.TextBox("toDate", "", new { @class = "date-picker" })
+    </div>
+    <div>
+        <input type="submit" class="btn btn-outline-success" value="Submit" />
+    </div>
+}
+</div>
