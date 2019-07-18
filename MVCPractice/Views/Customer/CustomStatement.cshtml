@@ -3,15 +3,7 @@
 @{
     ViewBag.Title = "CustomStatement";
 }
-@section customerMenu
-        {
-    <button type="button" id="fundTransferBtn" onclick="location.href='@Url.Action("FundTransfer")'" class="btn btn-info ">Fund Transer</button><br />
-    <button type="button" id="miniStatementBtn" onclick="location.href='@Url.Action("MiniStatement")'" class="btn btn-info ">MiniStatement</button><br />
-    <button type="button" id="changePasswordBtn" onclick="location.href='@Url.Action("ChangePassword")'" class="btn btn-info ">ChangePassword </button><br />
-    <button type="button" id="balanceEnquiryBtn" onclick="location.href='@Url.Action("BalanceEnquiry")'" class="btn btn-info ">BalanceEnquiry</button><br />
-    <button type="button" id="customStatementBtn" onclick="location.href='@Url.Action("CustomStatement")'" class="btn btn-info ">CustomStatement</button><br />
 
-}
 <script type="text/javascript">
     $(function () {
         // This will make every element with the class "date-picker" into a DatePicker element

@@ -47,8 +47,20 @@
                     }
                     
                 </div>
+
                 <ul class="nav navbar-nav navbar-right pull-right">
                     <li class="nav-item pull-right">
+                        @if (Session["role"]!=null)
+                        {
+                             <a class="navbar-brand"><h4 style="color:#ffffff">Welcome @Session["userId"] !</h4></a>
+                            
+                        }
+                        @if(Session["accountNumber"]!=null)
+                        {
+                            <a class="navbar-brand"><h4 style="color:#ffffff"> @Session["accountNumber"]
+                                </h4></a>
+                            
+                        }
                         <Label ID="HeaderName" style="color:#ffffff" ></Label>
                         <Label id="HeaderAccountNo" style="color:#ffffff"></Label>
                         @if (ViewContext.RouteData.Values["Controller"].ToString() != "Login")
@@ -65,11 +77,31 @@
                 
                 <div class="btn-group-vertical" style="padding-left:25px;">
                     <br />
-                    @if(IsSectionDefined("managerMenu")){
-                        @RenderSection("managerMenu")
+                    @if (Session["role"] == "Manager") { 
+                        
+        
+    <button type="button" id="fundTransferBtn" onclick="location.href='@Url.Action("Withdraw","Manager")'" class="btn btn-info ">Withdraw</button><br />
+    <button type="button" id="miniStatementBtn" onclick="location.href='@Url.Action("Deposit", "Manager")'" class="btn btn-info ">Deposit</button><br />
+    <button type="button" id="changePasswordBtn" onclick="location.href='@Url.Action("Customer", "Manager")'" class="btn btn-info ">Customer </button><br />
+    <button type="button" id="balanceEnquiryBtn" onclick="location.href='@Url.Action("Account", "Manager")'" class="btn btn-info ">Account</button><br />
+
+
+                    
+                  
+    
+                    
+                        
                     }
-                    else if(@IsSectionDefined("customerMenu")){
-                        @RenderSection("customerMenu")
+                    else if(Session["role"]=="Customer" && Session["accountNumber"]!=null){
+                      
+    <button type="button" id="fundTransferBtn" onclick="location.href='@Url.Action("FundTransfer","Customer")'" class="btn btn-info ">Fund Transer</button><br />
+    <button type="button" id="miniStatementBtn" onclick="location.href='@Url.Action("MiniStatement", "Customer")'" class="btn btn-info ">MiniStatement</button><br />
+    <button type="button" id="changePasswordBtn" onclick="location.href='@Url.Action("ChangePassword", "Customer")'" class="btn btn-info ">ChangePassword </button><br />
+    <button type="button" id="balanceEnquiryBtn" onclick="location.href='@Url.Action("BalanceEnquiry", "Customer")'" class="btn btn-info ">BalanceEnquiry</button><br />
+    <button type="button" id="customStatementBtn" onclick="location.href='@Url.Action("CustomStatement", "Customer")'" class="btn btn-info ">CustomStatement</button><br />
+
+
+ 
                     }
                     else{
                         

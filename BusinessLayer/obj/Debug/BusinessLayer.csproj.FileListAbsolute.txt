@@ -27,3 +27,13 @@ C:\Users\vp185149\Desktop\BankMVC-master\BusinessLayer\bin\Debug\EntityFramework
 C:\Users\vp185149\Desktop\BankMVC-master\BusinessLayer\obj\Debug\BusinessLayer.csprojResolveAssemblyReference.cache
 C:\Users\vp185149\Desktop\BankMVC-master\BusinessLayer\obj\Debug\BusinessLayer.dll
 C:\Users\vp185149\Desktop\BankMVC-master\BusinessLayer\obj\Debug\BusinessLayer.pdb
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\bin\Debug\BusinessLayer.dll.config
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\bin\Debug\BusinessLayer.dll
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\bin\Debug\BusinessLayer.pdb
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\bin\Debug\EntityFramework.dll
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\bin\Debug\EntityFramework.xml
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\obj\Debug\BusinessLayer.csprojResolveAssemblyReference.cache
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\obj\Debug\BusinessLayer.dll
+C:\Users\sy185090\Documents\BankMVC\BusinessLayer\obj\Debug\BusinessLayer.pdb

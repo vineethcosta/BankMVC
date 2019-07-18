@@ -16,6 +16,10 @@ namespace MVCPractice.Controllers
         {
             string role=Convert.ToString(Session["role"]);
             //string mgr = "Manager";
+            if (Session["accountNumber"] != null)
+            {
+                Session["accountNumber"] = null;
+            }
             if (role.Equals("Manager"))
                 return RedirectToAction("Index", "Manager");
             else if (role.Equals("Customer"))

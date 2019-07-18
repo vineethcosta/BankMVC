@@ -5,14 +5,7 @@
 }
 
 <h2>Deposit</h2>
-@section customerMenu
-        {
-    <button type="button" id="fundTransferBtn" onclick="location.href='@Url.Action("Withdraw")'" class="btn btn-info ">Withdraw</button><br />
-    <button type="button" id="miniStatementBtn" onclick="location.href='@Url.Action("Deposit")'" class="btn btn-info ">Deposit</button><br />
-    <button type="button" id="changePasswordBtn" onclick="location.href='@Url.Action("Customer")'" class="btn btn-info ">Customer </button><br />
-    <button type="button" id="balanceEnquiryBtn" onclick="location.href='@Url.Action("Account")'" class="btn btn-info ">Account</button><br />
 
-    }
     @using (Html.BeginForm())
     {
         <div class="jumbotron d-inline-block" style=" margin-top: 100px">
