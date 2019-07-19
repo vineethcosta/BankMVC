@@ -13,6 +13,14 @@
         <AssociationConnector Association="BankModel.FK_Transaction_Account" ManuallyRouted="false" />
         <AssociationConnector Association="BankModel.FK_Transaction_Account1" ManuallyRouted="false" />
         <AssociationConnector Association="BankModel.FK_Customer_Customer" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BankModel.Branch" Width="1.5" PointX="0.75" PointY="3.125" />
+        <EntityTypeShape EntityType="BankModel.CustomerMedal" Width="1.5" PointX="7.625" PointY="5.75" />
+        <EntityTypeShape EntityType="BankModel.Manager" Width="1.5" PointX="3" PointY="4.875" />
+        <AssociationConnector Association="BankModel.FK_Customer_Customer1" />
+        <AssociationConnector Association="BankModel.FK_Manager_Branch" />
+        <AssociationConnector Association="BankModel.FK_Customer_Manager" />
+        <AssociationConnector Association="BankModel.FK_Account_Account" />
+        <AssociationConnector Association="BankModel.FK_Account_CustomerMedal" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

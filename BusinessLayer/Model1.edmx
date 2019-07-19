@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BankModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BankModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="accountNo" />
@@ -17,6 +17,15 @@
           <Property Name="dateOfEdited" Type="varchar" MaxLength="15" />
           <Property Name="ClosingDate" Type="varchar" MaxLength="15" />
           <Property Name="amount" Type="int" />
+          <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Branch">
+          <Key>
+            <PropertyRef Name="branchId" />
+          </Key>
+          <Property Name="branchName" Type="varchar" MaxLength="50" />
+          <Property Name="branchId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="assigned" Type="int" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -35,6 +44,16 @@
           <Property Name="createdDate" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="editedDate" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="userId" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="branchId" Type="varchar" MaxLength="50" />
+          <Property Name="managerId" Type="int" />
+        </EntityType>
+        <EntityType Name="CustomerMedal">
+          <Key>
+            <PropertyRef Name="type" />
+          </Key>
+          <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="min" Type="int" />
+          <Property Name="max" Type="int" />
         </EntityType>
         <EntityType Name="Login">
           <Key>
@@ -42,7 +61,17 @@
           </Key>
           <Property Name="userId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="password" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="role" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="role" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="managerId" />
+          </Key>
+          <Property Name="managerName" Type="varchar" MaxLength="50" />
+          <Property Name="branchId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="managerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="address" Type="varchar" MaxLength="50" />
+          <Property Name="phoneNo" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Transaction">
           <Key>
@@ -56,6 +85,18 @@
           <Property Name="transactionType" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="comments" Type="varchar" MaxLength="50" />
         </EntityType>
+        <Association Name="FK_Account_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Account1" Type="Self.Account" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="accountNo" />
+            </Principal>
+            <Dependent Role="Account1">
+              <PropertyRef Name="accountNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Account_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
           <End Role="Account" Type="Self.Account" Multiplicity="*" />
@@ -68,15 +109,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Account_CustomerMedal">
+          <End Role="CustomerMedal" Type="Self.CustomerMedal" Multiplicity="1" />
+          <End Role="Account" Type="Self.Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerMedal">
+              <PropertyRef Name="type" />
+            </Principal>
+            <Dependent Role="Account">
+              <PropertyRef Name="type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Customer_Customer">
-          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="Branch" Type="Self.Branch" Multiplicity="0..1" />
           <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Login">
-              <PropertyRef Name="userId" />
+            <Principal Role="Branch">
+              <PropertyRef Name="branchId" />
             </Principal>
             <Dependent Role="Customer">
-              <PropertyRef Name="userId" />
+              <PropertyRef Name="branchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_Manager">
+          <End Role="Manager" Type="Self.Manager" Multiplicity="0..1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Manager">
+              <PropertyRef Name="managerId" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="managerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Manager_Branch">
+          <End Role="Branch" Type="Self.Branch" Multiplicity="1" />
+          <End Role="Manager" Type="Self.Manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branch">
+              <PropertyRef Name="branchId" />
+            </Principal>
+            <Dependent Role="Manager">
+              <PropertyRef Name="branchId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -232,16 +309,35 @@
         </Function>
         <EntityContainer Name="BankModelStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Branch" EntityType="Self.Branch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerMedal" EntityType="Self.CustomerMedal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Manager" EntityType="Self.Manager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Account_Account" Association="Self.FK_Account_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Account1" EntitySet="Account" />
+          </AssociationSet>
           <AssociationSet Name="FK_Account_Customer" Association="Self.FK_Account_Customer">
             <End Role="Customer" EntitySet="Customer" />
             <End Role="Account" EntitySet="Account" />
           </AssociationSet>
+          <AssociationSet Name="FK_Account_CustomerMedal" Association="Self.FK_Account_CustomerMedal">
+            <End Role="CustomerMedal" EntitySet="CustomerMedal" />
+            <End Role="Account" EntitySet="Account" />
+          </AssociationSet>
           <AssociationSet Name="FK_Customer_Customer" Association="Self.FK_Customer_Customer">
-            <End Role="Login" EntitySet="Login" />
+            <End Role="Branch" EntitySet="Branch" />
             <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_Manager" Association="Self.FK_Customer_Manager">
+            <End Role="Manager" EntitySet="Manager" />
+            <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Manager_Branch" Association="Self.FK_Manager_Branch">
+            <End Role="Branch" EntitySet="Branch" />
+            <End Role="Manager" EntitySet="Manager" />
           </AssociationSet>
           <AssociationSet Name="FK_Transaction_Account" Association="Self.FK_Transaction_Account">
             <End Role="Account" EntitySet="Account" />
@@ -252,8 +348,7 @@
             <End Role="Transaction" EntitySet="Transaction" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BankModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -272,6 +367,10 @@
           <NavigationProperty Name="Customer" Relationship="Self.FK_Account_Customer" FromRole="Account" ToRole="Customer" />
           <NavigationProperty Name="Transactions" Relationship="Self.FK_Transaction_Account" FromRole="Account" ToRole="Transaction" />
           <NavigationProperty Name="Transactions1" Relationship="Self.FK_Transaction_Account1" FromRole="Account" ToRole="Transaction" />
+          <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Account1" Relationship="BankModel.FK_Account_Account" FromRole="Account" ToRole="Account1" />
+          <NavigationProperty Name="Account2" Relationship="BankModel.FK_Account_Account" FromRole="Account1" ToRole="Account" />
+          <NavigationProperty Name="CustomerMedal" Relationship="BankModel.FK_Account_CustomerMedal" FromRole="Account" ToRole="CustomerMedal" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -292,6 +391,10 @@
           <Property Name="userId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Accounts" Relationship="Self.FK_Account_Customer" FromRole="Customer" ToRole="Account" />
           <NavigationProperty Name="Login" Relationship="Self.FK_Customer_Customer" FromRole="Customer" ToRole="Login" />
+          <Property Name="branchId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="managerId" Type="Int32" />
+          <NavigationProperty Name="Branch" Relationship="BankModel.FK_Customer_Customer1" FromRole="Customer" ToRole="Branch" />
+          <NavigationProperty Name="Manager" Relationship="BankModel.FK_Customer_Manager" FromRole="Customer" ToRole="Manager" />
         </EntityType>
         <EntityType Name="Login">
           <Key>
@@ -299,7 +402,7 @@
           </Key>
           <Property Name="userId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="role" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="role" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Customers" Relationship="Self.FK_Customer_Customer" FromRole="Login" ToRole="Customer" />
         </EntityType>
         <EntityType Name="Transaction">
@@ -414,22 +517,22 @@
             <Parameter Name="role" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="balanceEnq" ReturnType="Collection(Int32)">
-            <Parameter Name="acc" Mode="In" Type="Int64" />
+          <Parameter Name="acc" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="changePass" ReturnType="Collection(String)">
-            <Parameter Name="uid" Mode="In" Type="String" />
+          <Parameter Name="uid" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="checkAcc" ReturnType="Collection(Int32)">
-            <Parameter Name="acc" Mode="In" Type="Int64" />
+          <Parameter Name="acc" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="checkAmo" ReturnType="Collection(Int32)">
-            <Parameter Name="acc" Mode="In" Type="Int64" />
+          <Parameter Name="acc" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="checkCre" ReturnType="Collection(BankModel.checkCre_Result)">
-            <Parameter Name="uid" Mode="In" Type="String" />
+          <Parameter Name="uid" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="checkCust" ReturnType="Collection(String)">
-            <Parameter Name="customerID" Mode="In" Type="Int32" />
+          <Parameter Name="customerID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="datecheck" ReturnType="Collection(BankModel.datecheck_Result)">
             <Parameter Name="acc" Mode="In" Type="Int64" />
@@ -437,10 +540,10 @@
             <Parameter Name="end" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="deleteCustomer">
-            <Parameter Name="custId" Mode="In" Type="Int32" />
+          <Parameter Name="custId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="deleteDetails">
-            <Parameter Name="accountNo" Mode="In" Type="Int32" />
+          <Parameter Name="accountNo" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="deposit">
             <Parameter Name="acc" Mode="In" Type="Int64" />
@@ -458,10 +561,10 @@
           </FunctionImport>
           <FunctionImport Name="getAllCustomers" ReturnType="Collection(BankModel.getAllCustomers_Result)" />
           <FunctionImport Name="getCustomerName" ReturnType="Collection(String)">
-            <Parameter Name="uid" Mode="In" Type="String" />
+          <Parameter Name="uid" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="getSpecificCustomer" ReturnType="Collection(BankModel.getSpecificCustomer_Result)">
-            <Parameter Name="custId" Mode="In" Type="Int32" />
+          <Parameter Name="custId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="insTrans">
             <Parameter Name="acc1" Mode="In" Type="Int64" />
@@ -472,10 +575,10 @@
             <Parameter Name="Date" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="ministategen" ReturnType="Collection(BankModel.ministategen_Result)">
-            <Parameter Name="acc" Mode="In" Type="Int64" />
+          <Parameter Name="acc" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="prints" ReturnType="Collection(BankModel.prints_Result)">
-            <Parameter Name="id" Mode="In" Type="String" />
+          <Parameter Name="id" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="transferAdd">
             <Parameter Name="amt" Mode="In" Type="Int32" />
@@ -511,6 +614,29 @@
             <Parameter Name="acc" Mode="In" Type="Int64" />
             <Parameter Name="amt" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Branches" EntityType="BankModel.Branch" />
+          <EntitySet Name="CustomerMedals" EntityType="BankModel.CustomerMedal" />
+          <EntitySet Name="Managers" EntityType="BankModel.Manager" />
+          <AssociationSet Name="FK_Customer_Customer1" Association="BankModel.FK_Customer_Customer1">
+            <End Role="Branch" EntitySet="Branches" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Manager_Branch" Association="BankModel.FK_Manager_Branch">
+            <End Role="Branch" EntitySet="Branches" />
+            <End Role="Manager" EntitySet="Managers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_Manager" Association="BankModel.FK_Customer_Manager">
+            <End Role="Manager" EntitySet="Managers" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Account_Account" Association="BankModel.FK_Account_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Account1" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Account_CustomerMedal" Association="BankModel.FK_Account_CustomerMedal">
+            <End Role="CustomerMedal" EntitySet="CustomerMedals" />
+            <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="checkCre_Result">
           <Property Type="String" Name="password" Nullable="false" MaxLength="20" />
@@ -569,6 +695,97 @@
           <Property Type="String" Name="accountType" Nullable="false" MaxLength="10" />
           <Property Type="String" Name="status" Nullable="false" MaxLength="10" />
         </ComplexType>
+        <EntityType Name="Branch">
+          <Key>
+            <PropertyRef Name="branchId" />
+          </Key>
+          <Property Name="branchName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="branchId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="assigned" Type="Int32" />
+          <NavigationProperty Name="Customers" Relationship="BankModel.FK_Customer_Customer1" FromRole="Branch" ToRole="Customer" />
+          <NavigationProperty Name="Managers" Relationship="BankModel.FK_Manager_Branch" FromRole="Branch" ToRole="Manager" />
+        </EntityType>
+        <EntityType Name="CustomerMedal">
+          <Key>
+            <PropertyRef Name="type" />
+          </Key>
+          <Property Name="type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="min" Type="Int32" />
+          <Property Name="max" Type="Int32" />
+          <NavigationProperty Name="Accounts" Relationship="BankModel.FK_Account_CustomerMedal" FromRole="CustomerMedal" ToRole="Account" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="managerId" />
+          </Key>
+          <Property Name="managerName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="branchId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="managerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="phoneNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Branch" Relationship="BankModel.FK_Manager_Branch" FromRole="Manager" ToRole="Branch" />
+          <NavigationProperty Name="Customers" Relationship="BankModel.FK_Customer_Manager" FromRole="Manager" ToRole="Customer" />
+        </EntityType>
+        <Association Name="FK_Customer_Customer1">
+          <End Type="BankModel.Branch" Role="Branch" Multiplicity="0..1" />
+          <End Type="BankModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branch">
+              <PropertyRef Name="branchId" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="branchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Manager_Branch">
+          <End Type="BankModel.Branch" Role="Branch" Multiplicity="1" />
+          <End Type="BankModel.Manager" Role="Manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branch">
+              <PropertyRef Name="branchId" />
+            </Principal>
+            <Dependent Role="Manager">
+              <PropertyRef Name="branchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_Manager">
+          <End Type="BankModel.Manager" Role="Manager" Multiplicity="0..1" />
+          <End Type="BankModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Manager">
+              <PropertyRef Name="managerId" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="managerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Account_Account">
+          <End Type="BankModel.Account" Role="Account" Multiplicity="1" />
+          <End Type="BankModel.Account" Role="Account1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="accountNo" />
+            </Principal>
+            <Dependent Role="Account1">
+              <PropertyRef Name="accountNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Account_CustomerMedal">
+          <End Type="BankModel.CustomerMedal" Role="CustomerMedal" Multiplicity="1" />
+          <End Type="BankModel.Account" Role="Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerMedal">
+              <PropertyRef Name="type" />
+            </Principal>
+            <Dependent Role="Account">
+              <PropertyRef Name="type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -578,6 +795,7 @@
           <EntitySetMapping Name="Accounts">
             <EntityTypeMapping TypeName="BankModel.Account">
               <MappingFragment StoreEntitySet="Account">
+                <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="accountNo" ColumnName="accountNo" />
                 <ScalarProperty Name="customerId" ColumnName="customerId" />
                 <ScalarProperty Name="accountType" ColumnName="accountType" />
@@ -592,6 +810,8 @@
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="BankModel.Customer">
               <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="managerId" ColumnName="managerId" />
+                <ScalarProperty Name="branchId" ColumnName="branchId" />
                 <ScalarProperty Name="customerId" ColumnName="customerId" />
                 <ScalarProperty Name="customerName" ColumnName="customerName" />
                 <ScalarProperty Name="gender" ColumnName="gender" />
@@ -731,6 +951,35 @@
           <FunctionImportMapping FunctionImportName="updatePass" FunctionName="BankModel.Store.updatePass" />
           <FunctionImportMapping FunctionImportName="updateUserID" FunctionName="BankModel.Store.updateUserID" />
           <FunctionImportMapping FunctionImportName="withdraw" FunctionName="BankModel.Store.withdraw" />
+          <EntitySetMapping Name="Branches">
+            <EntityTypeMapping TypeName="BankModel.Branch">
+              <MappingFragment StoreEntitySet="Branch">
+                <ScalarProperty Name="assigned" ColumnName="assigned" />
+                <ScalarProperty Name="branchId" ColumnName="branchId" />
+                <ScalarProperty Name="branchName" ColumnName="branchName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerMedals">
+            <EntityTypeMapping TypeName="BankModel.CustomerMedal">
+              <MappingFragment StoreEntitySet="CustomerMedal">
+                <ScalarProperty Name="max" ColumnName="max" />
+                <ScalarProperty Name="min" ColumnName="min" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Managers">
+            <EntityTypeMapping TypeName="BankModel.Manager">
+              <MappingFragment StoreEntitySet="Manager">
+                <ScalarProperty Name="phoneNo" ColumnName="phoneNo" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="managerId" ColumnName="managerId" />
+                <ScalarProperty Name="branchId" ColumnName="branchId" />
+                <ScalarProperty Name="managerName" ColumnName="managerName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -15,28 +15,26 @@ namespace BusinessLayer
 using System;
     using System.Collections.Generic;
     
-public partial class Transaction
+public partial class CustomerMedal
 {
 
-    public long transactionId { get; set; }
+    public CustomerMedal()
+    {
 
-    public long fromAccountNo { get; set; }
+        this.Accounts = new HashSet<Account>();
 
-    public long toAccountNo { get; set; }
-
-    public string transactionDate { get; set; }
-
-    public int amount { get; set; }
-
-    public string transactionType { get; set; }
-
-    public string comments { get; set; }
+    }
 
 
+    public string type { get; set; }
 
-    public virtual Account Account { get; set; }
+    public Nullable<int> min { get; set; }
 
-    public virtual Account Account1 { get; set; }
+    public Nullable<int> max { get; set; }
+
+
+
+    public virtual ICollection<Account> Accounts { get; set; }
 
 }
 

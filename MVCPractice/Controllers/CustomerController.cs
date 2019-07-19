@@ -17,8 +17,8 @@ namespace MVCPractice.Controllers
             string userId=Convert.ToString(Session["userId"]);
             BankEntities1 dbContext = new BankEntities1();
             Customer customer = dbContext.Customers.Single(x => x.userId == userId);
-            List<Account> accounts = (dbContext.Accounts.Where(x=>x.customerId==customer.customerId)).ToList();
-                
+            List<Account> accounts = (dbContext.Accounts.Where(y=>y.customerId==customer.customerId)).ToList();
+            Session["medal"]=null;    
             return View(accounts);
         }
 
@@ -32,6 +32,12 @@ namespace MVCPractice.Controllers
             else
             {
                 Session["accountNumber"] = selectedAccount;
+                int selectedAccount2 = int.Parse(selectedAccount);
+                BankEntities1 dbContext = new BankEntities1();
+                Account account = dbContext.Accounts.Single(x => x.accountNo == selectedAccount2);
+                var amount=account.amount;
+                CustomerMedal cmedal = dbContext.CustomerMedals.Single(x => amount > x.min && amount < x.max);
+                Session["medal"] = cmedal.type;
                 return RedirectToAction("Menu");
             }
 

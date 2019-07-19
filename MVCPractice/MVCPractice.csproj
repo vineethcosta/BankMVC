@@ -181,6 +181,10 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Global.asax" />
+    <Content Include="Images\bronze.jfif" />
+    <Content Include="Images\Gold.jfif" />
+    <Content Include="Images\platinum.jfif" />
+    <Content Include="Images\Silver.jfif" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />

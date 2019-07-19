@@ -12,6 +12,15 @@
     <Property Name="dateOfEdited" Type="varchar" MaxLength="15" />
     <Property Name="ClosingDate" Type="varchar" MaxLength="15" />
     <Property Name="amount" Type="int" />
+    <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Branch">
+    <Key>
+      <PropertyRef Name="branchId" />
+    </Key>
+    <Property Name="branchName" Type="varchar" MaxLength="50" />
+    <Property Name="branchId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="assigned" Type="int" />
   </EntityType>
   <EntityType Name="Customer">
     <Key>
@@ -30,6 +39,16 @@
     <Property Name="createdDate" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="editedDate" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="userId" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="branchId" Type="varchar" MaxLength="50" />
+    <Property Name="managerId" Type="int" />
+  </EntityType>
+  <EntityType Name="CustomerMedal">
+    <Key>
+      <PropertyRef Name="type" />
+    </Key>
+    <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="min" Type="int" />
+    <Property Name="max" Type="int" />
   </EntityType>
   <EntityType Name="Login">
     <Key>
@@ -37,7 +56,17 @@
     </Key>
     <Property Name="userId" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="password" Type="varchar" MaxLength="20" Nullable="false" />
-    <Property Name="role" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="role" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Manager">
+    <Key>
+      <PropertyRef Name="managerId" />
+    </Key>
+    <Property Name="managerName" Type="varchar" MaxLength="50" />
+    <Property Name="branchId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="managerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="address" Type="varchar" MaxLength="50" />
+    <Property Name="phoneNo" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Transaction">
     <Key>
@@ -51,6 +80,18 @@
     <Property Name="transactionType" Type="varchar" MaxLength="15" Nullable="false" />
     <Property Name="comments" Type="varchar" MaxLength="50" />
   </EntityType>
+  <Association Name="FK_Account_Account">
+    <End Role="Account" Type="Self.Account" Multiplicity="1" />
+    <End Role="Account1" Type="Self.Account" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="accountNo" />
+      </Principal>
+      <Dependent Role="Account1">
+        <PropertyRef Name="accountNo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Account_Customer">
     <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
     <End Role="Account" Type="Self.Account" Multiplicity="*" />
@@ -63,15 +104,51 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Account_CustomerMedal">
+    <End Role="CustomerMedal" Type="Self.CustomerMedal" Multiplicity="1" />
+    <End Role="Account" Type="Self.Account" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerMedal">
+        <PropertyRef Name="type" />
+      </Principal>
+      <Dependent Role="Account">
+        <PropertyRef Name="type" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Customer_Customer">
-    <End Role="Login" Type="Self.Login" Multiplicity="1" />
+    <End Role="Branch" Type="Self.Branch" Multiplicity="0..1" />
     <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Login">
-        <PropertyRef Name="userId" />
+      <Principal Role="Branch">
+        <PropertyRef Name="branchId" />
       </Principal>
       <Dependent Role="Customer">
-        <PropertyRef Name="userId" />
+        <PropertyRef Name="branchId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Customer_Manager">
+    <End Role="Manager" Type="Self.Manager" Multiplicity="0..1" />
+    <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Manager">
+        <PropertyRef Name="managerId" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="managerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Manager_Branch">
+    <End Role="Branch" Type="Self.Branch" Multiplicity="1" />
+    <End Role="Manager" Type="Self.Manager" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="branchId" />
+      </Principal>
+      <Dependent Role="Manager">
+        <PropertyRef Name="branchId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -227,16 +304,35 @@
   </Function>
   <EntityContainer Name="BankModelStoreContainer">
     <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Branch" EntityType="Self.Branch" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CustomerMedal" EntityType="Self.CustomerMedal" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Manager" EntityType="Self.Manager" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Account_Account" Association="Self.FK_Account_Account">
+      <End Role="Account" EntitySet="Account" />
+      <End Role="Account1" EntitySet="Account" />
+    </AssociationSet>
     <AssociationSet Name="FK_Account_Customer" Association="Self.FK_Account_Customer">
       <End Role="Customer" EntitySet="Customer" />
       <End Role="Account" EntitySet="Account" />
     </AssociationSet>
+    <AssociationSet Name="FK_Account_CustomerMedal" Association="Self.FK_Account_CustomerMedal">
+      <End Role="CustomerMedal" EntitySet="CustomerMedal" />
+      <End Role="Account" EntitySet="Account" />
+    </AssociationSet>
     <AssociationSet Name="FK_Customer_Customer" Association="Self.FK_Customer_Customer">
-      <End Role="Login" EntitySet="Login" />
+      <End Role="Branch" EntitySet="Branch" />
       <End Role="Customer" EntitySet="Customer" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Customer_Manager" Association="Self.FK_Customer_Manager">
+      <End Role="Manager" EntitySet="Manager" />
+      <End Role="Customer" EntitySet="Customer" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Manager_Branch" Association="Self.FK_Manager_Branch">
+      <End Role="Branch" EntitySet="Branch" />
+      <End Role="Manager" EntitySet="Manager" />
     </AssociationSet>
     <AssociationSet Name="FK_Transaction_Account" Association="Self.FK_Transaction_Account">
       <End Role="Account" EntitySet="Account" />

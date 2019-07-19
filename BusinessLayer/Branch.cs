@@ -15,28 +15,30 @@ namespace BusinessLayer
 using System;
     using System.Collections.Generic;
     
-public partial class Transaction
+public partial class Branch
 {
 
-    public long transactionId { get; set; }
+    public Branch()
+    {
 
-    public long fromAccountNo { get; set; }
+        this.Customers = new HashSet<Customer>();
 
-    public long toAccountNo { get; set; }
+        this.Managers = new HashSet<Manager>();
 
-    public string transactionDate { get; set; }
-
-    public int amount { get; set; }
-
-    public string transactionType { get; set; }
-
-    public string comments { get; set; }
+    }
 
 
+    public string branchName { get; set; }
 
-    public virtual Account Account { get; set; }
+    public string branchId { get; set; }
 
-    public virtual Account Account1 { get; set; }
+    public Nullable<int> assigned { get; set; }
+
+
+
+    public virtual ICollection<Customer> Customers { get; set; }
+
+    public virtual ICollection<Manager> Managers { get; set; }
 
 }
 

@@ -13,35 +13,34 @@ namespace BusinessLayer
 {
 
 using System;
+    using System.Collections.Generic;
     
-public partial class getSpecificCustomer_Result
+public partial class Manager
 {
 
-    public int customerId { get; set; }
+    public Manager()
+    {
 
-    public string customerName { get; set; }
+        this.Customers = new HashSet<Customer>();
 
-    public string gender { get; set; }
+    }
 
-    public string dob { get; set; }
+
+    public string managerName { get; set; }
+
+    public string branchId { get; set; }
+
+    public int managerId { get; set; }
 
     public string address { get; set; }
 
-    public string state { get; set; }
-
-    public string city { get; set; }
-
-    public string pincode { get; set; }
-
     public string phoneNo { get; set; }
 
-    public string email { get; set; }
 
-    public string createdDate { get; set; }
 
-    public string editedDate { get; set; }
+    public virtual Branch Branch { get; set; }
 
-    public string userId { get; set; }
+    public virtual ICollection<Customer> Customers { get; set; }
 
 }
 

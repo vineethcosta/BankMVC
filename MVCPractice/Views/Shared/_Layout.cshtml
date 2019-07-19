@@ -57,10 +57,19 @@
                         }
                         @if(Session["accountNumber"]!=null)
                         {
-                            <a class="navbar-brand"><h4 style="color:#ffffff"> @Session["accountNumber"]
+                            <a class="navbar-brand"><h4 style="color:#ffffff"> @Session["accountNumber"]  
+                               
                                 </h4></a>
                             
                         }
+                        @if (Session["medal"] != null && Session["accountNumber"] != null)
+                           
+{
+                             var medal=Session["medal"].ToString()+".jfif";
+                             <img src="~/Images/@medal" alt="Sample Photo" />
+
+
+}
                         <Label ID="HeaderName" style="color:#ffffff" ></Label>
                         <Label id="HeaderAccountNo" style="color:#ffffff"></Label>
                         @if (ViewContext.RouteData.Values["Controller"].ToString() != "Login")

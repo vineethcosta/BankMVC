@@ -4,6 +4,7 @@
     <EntitySetMapping Name="Accounts">
       <EntityTypeMapping TypeName="BankModel.Account">
         <MappingFragment StoreEntitySet="Account">
+          <ScalarProperty Name="type" ColumnName="type" />
           <ScalarProperty Name="accountNo" ColumnName="accountNo" />
           <ScalarProperty Name="customerId" ColumnName="customerId" />
           <ScalarProperty Name="accountType" ColumnName="accountType" />
@@ -18,6 +19,8 @@
     <EntitySetMapping Name="Customers">
       <EntityTypeMapping TypeName="BankModel.Customer">
         <MappingFragment StoreEntitySet="Customer">
+          <ScalarProperty Name="managerId" ColumnName="managerId" />
+          <ScalarProperty Name="branchId" ColumnName="branchId" />
           <ScalarProperty Name="customerId" ColumnName="customerId" />
           <ScalarProperty Name="customerName" ColumnName="customerName" />
           <ScalarProperty Name="gender" ColumnName="gender" />
@@ -157,5 +160,34 @@
     <FunctionImportMapping FunctionImportName="updatePass" FunctionName="BankModel.Store.updatePass" />
     <FunctionImportMapping FunctionImportName="updateUserID" FunctionName="BankModel.Store.updateUserID" />
     <FunctionImportMapping FunctionImportName="withdraw" FunctionName="BankModel.Store.withdraw" />
+    <EntitySetMapping Name="Branches">
+      <EntityTypeMapping TypeName="BankModel.Branch">
+        <MappingFragment StoreEntitySet="Branch">
+          <ScalarProperty Name="assigned" ColumnName="assigned" />
+          <ScalarProperty Name="branchId" ColumnName="branchId" />
+          <ScalarProperty Name="branchName" ColumnName="branchName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustomerMedals">
+      <EntityTypeMapping TypeName="BankModel.CustomerMedal">
+        <MappingFragment StoreEntitySet="CustomerMedal">
+          <ScalarProperty Name="max" ColumnName="max" />
+          <ScalarProperty Name="min" ColumnName="min" />
+          <ScalarProperty Name="type" ColumnName="type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Managers">
+      <EntityTypeMapping TypeName="BankModel.Manager">
+        <MappingFragment StoreEntitySet="Manager">
+          <ScalarProperty Name="phoneNo" ColumnName="phoneNo" />
+          <ScalarProperty Name="address" ColumnName="address" />
+          <ScalarProperty Name="managerId" ColumnName="managerId" />
+          <ScalarProperty Name="branchId" ColumnName="branchId" />
+          <ScalarProperty Name="managerName" ColumnName="managerName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
