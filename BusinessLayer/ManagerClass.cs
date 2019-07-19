@@ -12,6 +12,9 @@ namespace BusinessLayer
         String ConnectionString = System.Configuration.ConfigurationManager.AppSettings["ConnectionString"];
         public string withdraw(long acc, int amt)
         {
+            string comment = "withdraw done";
+            string type = "withdraw";
+           TransactionClass obj1 = new TransactionClass();
             SqlConnection con = new SqlConnection(ConnectionString);
             con.Open();
             string sql = "checkAcc";
@@ -71,12 +74,15 @@ namespace BusinessLayer
                 return "accountNotFound";
             }
 
-            con.Close();
+            obj1.insTrans(acc, acc, amt, type, comment);
             return "success";
 
         }
         public string deposit(long acc, int amt)
         {
+            string comment = "deposit done";
+            string type = "deposit";
+            TransactionClass obj1 = new TransactionClass();
             SqlConnection con = new SqlConnection(ConnectionString);
             con.Open();
             string sql = "checkAcc";
@@ -118,8 +124,8 @@ namespace BusinessLayer
                 return "accountNotFound";
 
             }
-
-            con.Close();
+            obj1.insTrans(acc, acc, amt, type, comment);
+            
             return "success";
 
         }

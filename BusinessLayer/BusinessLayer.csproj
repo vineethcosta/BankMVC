@@ -99,6 +99,7 @@
     <Compile Include="Transaction.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="TransactionClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config">

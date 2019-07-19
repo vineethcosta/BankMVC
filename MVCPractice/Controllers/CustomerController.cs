@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using BusinessLayer;
 
+
 namespace MVCPractice.Controllers
 {
     public class CustomerController : Controller
@@ -58,6 +59,7 @@ namespace MVCPractice.Controllers
             {
 
                 CustomerClass obj = new CustomerClass();
+                TransactionClass obj1 = new TransactionClass();
                 if (accountNo == destinationAccountNo)
                 {
                     ViewBag.Error = "Source and destination account cant be same";
@@ -75,7 +77,7 @@ namespace MVCPractice.Controllers
 
                         ViewBag.Success = "transferred " + amount + " successfully";
 
-                        obj.insTrans(accountNo, destinationAccountNo, amount, "FundTransfer", comment);
+                        obj1.insTrans(accountNo, destinationAccountNo, amount, "FundTransfer", comment);
                         ModelState.Clear();
                     }
                     else
@@ -101,7 +103,7 @@ namespace MVCPractice.Controllers
             long accountNo =  long.Parse((Session["accountNumber"]).ToString());
             BankEntities1 dbContext = new BankEntities1();
 
-            List<Transaction> transactions = (List<Transaction>)(dbContext.Transactions.Where(x => x.fromAccountNo == accountNo).OrderByDescending(x => x.transactionId).ToList());
+            List<Transaction> transactions = (List<Transaction>)(dbContext.Transactions.Where(x => x.fromAccountNo == accountNo || x.toAccountNo == accountNo).OrderByDescending(x => x.transactionId).ToList());
 
             return View(transactions);
         }
