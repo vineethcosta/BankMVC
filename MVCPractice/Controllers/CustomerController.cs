@@ -58,8 +58,9 @@ namespace MVCPractice.Controllers
         }
 
         [HttpPost]
-        public ActionResult FundTransfer(long accountNo,long destinationAccountNo,int amount,string comment)
+        public ActionResult FundTransfer(long destinationAccountNo,int amount,string comment)
         {
+            long accountNo = long.Parse(Session["accountNumber"].ToString());
             
             try
             {
@@ -95,8 +96,9 @@ namespace MVCPractice.Controllers
                 {
                     ViewBag.Error="Destination Account not found";
                 }
+               Session["medal"]= obj.checkMedal(accountNo);
             }
-
+    
             catch (Exception exp)
             {
                 ViewBag.Error = "Exception "+exp;

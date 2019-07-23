@@ -75,6 +75,7 @@ namespace BusinessLayer
             }
 
             obj1.insTrans(acc, acc, amt, type, comment);
+          
             return "success";
 
         }

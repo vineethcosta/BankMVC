@@ -33,7 +33,43 @@ namespace BusinessLayer
             con.Close();
             return false;
         }
+        public string checkMedal(long acc){
 
+            int amt;
+            CustomerClass obj= new CustomerClass();
+            amt = obj.getAmount(acc);
+            String ConnectionString = System.Configuration.ConfigurationManager.AppSettings["ConnectionString"];
+            SqlConnection con = new SqlConnection(ConnectionString);
+            con.Open();
+            string sql = "changeMedal";
+            SqlCommand command = new SqlCommand(sql, con);
+            SqlParameter param1 = new SqlParameter("@amt", amt);
+            command.Parameters.Add(param1);
+            command.CommandType = CommandType.StoredProcedure;
+            command.ExecuteNonQuery();
+            
+            
+            string sql2 = "getMedal";
+            SqlCommand command2 = new SqlCommand(sql2, con);
+            SqlParameter param12 = new SqlParameter("@acc", acc);
+            command2.Parameters.Add(param12);
+            command2.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da2 = new SqlDataAdapter(command2);
+            DataSet ds = new DataSet();
+            da2.Fill(ds);
+            string res=null;
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                res = ds.Tables[0].Rows[0]["type"].ToString();
+
+            }
+           
+            con.Close();
+            return res;
+
+
+        }
         public int getAmount(long acc1)
         {
             int res = 0;
@@ -58,7 +94,7 @@ namespace BusinessLayer
             con.Close();
             return -100;
         }
-
+         
         public void transferAdd(int amount, long acc)
         {
             String ConnectionString = System.Configuration.ConfigurationManager.AppSettings["ConnectionString"];

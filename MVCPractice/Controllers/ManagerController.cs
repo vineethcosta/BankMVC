@@ -29,6 +29,8 @@ namespace MVCPractice.Controllers
                 ManagerClass obj = new ManagerClass();
 
                 string res = obj.withdraw(acc, amt);
+                CustomerClass cc = new CustomerClass();
+                Session["Medal"] = cc.checkMedal(acc);
                 ViewBag.result = res;
 
             }
@@ -52,7 +54,9 @@ namespace MVCPractice.Controllers
 
                 ManagerClass obj = new ManagerClass();
 
-                string res = obj.withdraw(acc, amt);
+                string res = obj.deposit(acc, amt);
+                CustomerClass cc = new CustomerClass();
+                Session["Medal"] = cc.checkMedal(acc);
                 ViewBag.result = res;
 
             }
